@@ -1,41 +1,39 @@
 import { app, BrowserWindow } from "electron";
+import * as path from "path";
 
-class Main {
-  private mainWindow: BrowserWindow;
+let mainWindow: Electron.BrowserWindow | null;
 
-  public init() {
-    app.on("ready", this.createWindow);
-    app.on("window-all-closed", this.onWindowAllClosed);
-    app.on("activate", this.onActivate);
-  }
+function createWindow() {
+  mainWindow = new BrowserWindow({
+    height: 600,
+    title: `Electron IPC`,
+    webPreferences: {
+      nodeIntegration: false,
+      preload: path.join(__dirname, "preload.js"),
+    },
+    width: 800,
+  });
 
-  private onWindowAllClosed() {
-    if (process.platform !== "darwin") {
-      app.quit();
-    }
-  }
+  mainWindow.loadFile(path.join(__dirname, "../../index.html"));
+  // mainWindow.webContents.openDevTools();
 
-  private onActivate() {
-    if (!this.mainWindow) {
-      this.createWindow();
-    }
-  }
-
-  private createWindow() {
-    this.mainWindow = new BrowserWindow({
-      height: 600,
-      width: 800,
-      title: `Yet another Electron Application`,
-      webPreferences: {
-        nodeIntegration: true, // makes it possible to use `require` within our index.html
-      },
-    });
-
-    // this.mainWindow.webContents.openDevTools();
-    this.mainWindow.loadFile("../../index.html");
-  }
+  mainWindow.on("closed", () => {
+    mainWindow = null;
+  });
 }
 
-const main = new Main();
-main.init();
-module.exports=main;
+app.on("ready", createWindow);
+
+app.on("window-all-closed", () => {
+  if (process.platform !== "darwin") {
+    app.quit();
+  }
+});
+
+app.on("activate", () => {
+  // On OS X it"s common to re-create a window in the app when the
+  // dock icon is clicked and there are no other windows open.
+  if (mainWindow === null) {
+    createWindow();
+  }
+});
