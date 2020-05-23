@@ -2,11 +2,13 @@
   "name": "electron-ipc",
   "version": "1.0.0",
   "description": "Electron IPC example",
+  "main": "build/main/main.js",
   "scripts": {
+    "clean":"rm -rf build && mkdir build",
     "build": "tsc",
     "watch": "tsc -w",
-    "prestart": "yarn build",
-    "start": "electron ./dist/electron/main.js"
+    "prestart": "yarn clean && yarn build",
+    "start": "node_modules/.bin/electron ./build/main/main.js"
   },
   "author": "Christoph Purrer",
   "license": "MIT",
