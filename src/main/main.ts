@@ -1,8 +1,9 @@
 import { app, BrowserWindow, ipcMain, IpcMainInvokeEvent } from "electron";
-import { execSync } from "child_process";
 import * as path from "path";
+import { loadAndWrapAddon, Addon } from "./addon";
 
 let mainWindow: Electron.BrowserWindow | null;
+let addon: Addon;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -21,6 +22,8 @@ function createWindow() {
   mainWindow.on("closed", () => {
     mainWindow = null;
   });
+
+  addon = loadAndWrapAddon();
 }
 
 app.on("ready", createWindow);
@@ -45,7 +48,6 @@ ipcMain.handle(
   async (event: IpcMainInvokeEvent, args: any[]) => {
     console.log(`event: ${event}`);
     console.log(`args: ${args}`);
-    const result = execSync("uname -a").toString();
-    return { kernel: result };
+    return addon.getSystemInfo("abc");
   }
 );
