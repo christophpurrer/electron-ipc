@@ -1,6 +1,6 @@
 import { app, BrowserWindow, ipcMain, IpcMainInvokeEvent } from "electron";
 import * as path from "path";
-import { loadAndWrapAddon, Addon } from "./addon";
+import { loadAndWrapAddon, Addon } from "../shared/addon";
 
 let mainWindow: Electron.BrowserWindow | null;
 let addon: Addon;
