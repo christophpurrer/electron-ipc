@@ -1,4 +1,5 @@
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, ipcMain } from "electron";
+import { execSync } from "child_process";
 import * as path from "path";
 
 let mainWindow: Electron.BrowserWindow | null;
@@ -36,4 +37,10 @@ app.on("activate", () => {
   if (mainWindow === null) {
     createWindow();
   }
+});
+
+// Main process
+ipcMain.handle("system-info", async (event, someArgument) => {
+  const result = execSync("uname -a").toString();
+  return { kernel: result };
 });

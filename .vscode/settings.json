@@ -1,0 +1,10 @@
+{
+  "editor.formatOnSave": true,
+  "files.exclude": {
+    "**/.DS_Store": true,
+    "**/.git": true,
+    "**/*.d.ts.map": true,
+    "**/build": true,
+    "**/dist": true
+  }
+}

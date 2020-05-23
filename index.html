@@ -11,13 +11,22 @@
       http-equiv="X-Content-Security-Policy"
       content="default-src 'self'; script-src 'self'"
     />
-    <title>Hello World!</title>
+    <title>Electron IPC</title>
+    <style>
+      .row {
+        margin: 10px;
+      }
+    </style>
   </head>
   <body>
-    <h1>Hello World!</h1>
-    We are using Node.js <span id="node-version"></span>, Chromium
-    <span id="chrome-version"></span>, and Electron
-    <span id="electron-version"></span>.
+    <h1>Electron IPC!</h1>
+    <div class="row">
+      We are using Node.js <span id="node-version"></span>, Chromium
+      <span id="chrome-version"></span>, and Electron
+      <span id="electron-version"></span>.
+    </div>
+    <button id="request-os-info" class="row">Request OS Info</button>
+    <div id="os-info" class="row"></div>
     <script src="./build/renderer/renderer.js"></script>
   </body>
 </html>
