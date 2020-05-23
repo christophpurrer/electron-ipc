@@ -1,12 +1,19 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "target": "es5",
-    "noImplicitAny": true,
-    "sourceMap": true,
+    "target": "es2015",
+    "module": "commonjs",
     "moduleResolution": "node",
+    "noImplicitAny": true,
+    "pretty": true,
+    "resolveJsonModule": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "noUnusedLocals": true,
     "outDir": "build",
-    "baseUrl": "."
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "jsx": "react"
   },
   "include": [
     "src/**/*"

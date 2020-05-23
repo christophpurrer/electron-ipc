@@ -4,7 +4,7 @@
   "description": "Electron IPC example",
   "main": "build/main/main.js",
   "scripts": {
-    "clean":"rm -rf build && mkdir build",
+    "clean": "rm -rf build && mkdir build",
     "build": "tsc",
     "watch": "tsc -w",
     "prestart": "yarn clean && yarn build",
