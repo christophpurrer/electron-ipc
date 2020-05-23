@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain } from "electron";
+import { app, BrowserWindow, ipcMain, IpcMainInvokeEvent } from "electron";
 import { execSync } from "child_process";
 import * as path from "path";
 
@@ -40,7 +40,12 @@ app.on("activate", () => {
 });
 
 // Main process
-ipcMain.handle("system-info", async (event, someArgument) => {
-  const result = execSync("uname -a").toString();
-  return { kernel: result };
-});
+ipcMain.handle(
+  "system-info",
+  async (event: IpcMainInvokeEvent, args: any[]) => {
+    console.log(`event: ${event}`);
+    console.log(`args: ${args}`);
+    const result = execSync("uname -a").toString();
+    return { kernel: result };
+  }
+);
