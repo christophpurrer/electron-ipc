@@ -1,0 +1,17 @@
+{
+  "name": "electron-ipc",
+  "version": "1.0.0",
+  "description": "Electron IPC example",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "prestart": "yarn build",
+    "start": "electron ./dist/electron/main.js"
+  },
+  "author": "Christoph Purrer",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^9.0.0",
+    "typescript": "^3.8.3"
+  }
+}
