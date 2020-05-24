@@ -2,29 +2,23 @@
 // be executed in the renderer process for that window.
 // All of the Node.js APIs are available in this process.
 import { AddonService } from "../shared/addonService";
-import { SystemInfo } from "../shared/addon";
 import { IpcRenderer } from "electron";
 
-class AddonServiceRender implements AddonService {
-  ipcRenderer: IpcRenderer;
-  constructor(ipcRenderer: IpcRenderer) {
-    this.ipcRenderer = ipcRenderer;
-  }
-
-  getSystemInfo(threadId: number, feature: string): Promise<SystemInfo> {
-    return this.ipcRenderer.invoke("getSystemInfo", [threadId, feature]);
-  }
-
-  setUser(userId: string): Promise<void> {
-    return Promise.resolve();
-  }
+function createAddonServiceRender(ipcRenderer: IpcRenderer): AddonService {
+  return {
+    getSystemInfo: (...args) => ipcRenderer.invoke("getSystemInfo", [...args]),
+    setUser: (...args) => ipcRenderer.invoke("setUser", [...args]),
+  };
 }
 
-const service = new AddonServiceRender(window.bridge.ipcRenderer);
-document
-  .getElementById("request-os-info")!
-  .addEventListener("click", async () => {
-    const result = await service.getSystemInfo(1, "kernel");
-    document.getElementById("os-info")!.innerHTML =
-      result.threadId + ": " + result.feature + " > " + result.kernel;
-  });
+const service: AddonService = createAddonServiceRender(
+  window.bridge.ipcRenderer
+);
+const requestOSInfo = document.getElementById("request-os-info");
+requestOSInfo!.addEventListener("click", async () => {
+  // await service.setUser("4");
+  const systemInfo = await service.getSystemInfo(1, "kernel");
+  const osInfo = document.getElementById("os-info");
+  osInfo!.innerHTML =
+    systemInfo.threadId + ": " + systemInfo.feature + " > " + systemInfo.kernel;
+});

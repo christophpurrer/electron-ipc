@@ -12,7 +12,7 @@
       "preLaunchTask": "prestart",
       "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron",
       "runtimeArgs": ["--remote-debugging-port=9223"],
-      "program": "${workspaceFolder}/build/main/main.js"
+      "program": "${workspaceFolder}/dist/main/main.js"
     }
   ]
 }
