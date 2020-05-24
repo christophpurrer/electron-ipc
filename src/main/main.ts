@@ -10,7 +10,7 @@ function createWindow() {
     height: 600,
     title: `Electron IPC`,
     webPreferences: {
-      nodeIntegration: false,
+      nodeIntegration: true,
       preload: path.join(__dirname, "preload.js"),
     },
     width: 800,

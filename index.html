@@ -5,11 +5,7 @@
     <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self'"
-    />
-    <meta
-      http-equiv="X-Content-Security-Policy"
-      content="default-src 'self'; script-src 'self'"
+      content="script-src 'self' 'unsafe-inline';"
     />
     <title>Electron IPC</title>
     <link rel="stylesheet" href="styles.css" />
@@ -22,7 +18,9 @@
       <span id="electron-version"></span>.
     </div>
     <button id="request-os-info" class="row">Request OS Info</button>
-    <div id="os-info" class="row"></div>
-    <script src="./build/renderer/renderer.js"></script>
+    <div id="os-info" class="row" />
+    <script>
+      require("./dist/renderer/renderer.js");
+    </script>
   </body>
 </html>

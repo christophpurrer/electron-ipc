@@ -2,19 +2,16 @@
   "name": "electron-ipc",
   "version": "1.0.0",
   "description": "Electron IPC example",
-  "main": "build/main/main.js",
   "scripts": {
     "build": "tsc",
-    "clean": "rm -rf build && mkdir build",
-    "lint": "tslint -c tslint.json -p tsconfig.json",
+    "clean": "rm -rf dist && mkdir dist",
     "prestart": "yarn clean && yarn build",
-    "start": "node_modules/.bin/electron ./build/main/main.js"
+    "start": "node_modules/.bin/electron ./dist/main/main.js"
   },
   "author": "Christoph Purrer",
   "license": "MIT",
   "devDependencies": {
     "electron": "^9.0.0",
-    "tslint": "^6.1.2",
     "typescript": "^3.8.3"
   }
 }

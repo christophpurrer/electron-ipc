@@ -1,20 +1,19 @@
 {
+  /* Visit https://aka.ms/tsconfig.json to read more about this file */
   "compileOnSave": false,
   "compilerOptions": {
-    "experimentalDecorators": true,
-    "jsx": "react",
+    "target": "es6",
     "module": "commonjs",
-    "moduleResolution": "node",
+    "sourceMap": true,
+    "outDir": "dist",
+    "baseUrl": ".",
+    "strict": true,
     "noImplicitAny": true,
     "noUnusedLocals": true,
-    "outDir": "build",
-    "pretty": true,
-    "resolveJsonModule": true,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
     "skipLibCheck": true,
-    "sourceMap": true,
-    "strictNullChecks": true,
-    "strictFunctionTypes": true,
-    "target": "es2015"
+    "forceConsistentCasingInFileNames": true
   },
   "include": ["src/**/*"]
 }
