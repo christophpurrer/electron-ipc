@@ -1,13 +1,15 @@
 import { execSync } from "child_process";
 
 export type SystemInfo = {
+  threadId: number;
+  feature: string;
   kernel: string;
 };
 
 export type Addon = {
   key: string;
   anotherKey: Map<string, number>;
-  getSystemInfo: (feature: string) => Promise<SystemInfo>;
+  getSystemInfo: (threadId: number, feature: string) => Promise<SystemInfo>;
 };
 
 export function loadAndWrapAddon(): Addon {
@@ -17,10 +19,12 @@ export function loadAndWrapAddon(): Addon {
   return Object.freeze({
     key: "notification",
     anotherKey: anotherKey,
-    getSystemInfo: async (feature: string) => {
-      const result = execSync("uname -a").toString();
+    getSystemInfo: async (threadId: number, feature: string) => {
+      const kernel = execSync("uname -a").toString();
       return {
-        kernel: result,
+        threadId,
+        feature,
+        kernel,
       };
     },
   });

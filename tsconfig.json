@@ -1,21 +1,20 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "target": "es2015",
+    "experimentalDecorators": true,
+    "jsx": "react",
     "module": "commonjs",
     "moduleResolution": "node",
     "noImplicitAny": true,
-    "pretty": true,
-    "resolveJsonModule": true,
-    "strictNullChecks": true,
-    "strictFunctionTypes": true,
     "noUnusedLocals": true,
     "outDir": "build",
+    "pretty": true,
+    "resolveJsonModule": true,
     "skipLibCheck": true,
     "sourceMap": true,
-    "jsx": "react"
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "target": "es2015"
   },
-  "include": [
-    "src/**/*"
-  ]
+  "include": ["src/**/*"]
 }

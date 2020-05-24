@@ -5,10 +5,11 @@ const requestOSInfo = document.getElementById("request-os-info");
 const osInfo = document.getElementById("os-info");
 if (requestOSInfo && osInfo) {
   requestOSInfo.addEventListener("click", async () => {
-    const result = await window.bridge.ipcRenderer.invoke("system-info", {
-      a: "b",
-      b: 2,
-    });
-    osInfo.innerHTML = result.kernel;
+    const result = await window.bridge.ipcRenderer.invoke("getSystemInfo", [
+      1,
+      "kernel",
+    ]);
+    osInfo.innerHTML =
+      result.threadId + ": " + result.feature + " > " + result.kernel;
   });
 }
