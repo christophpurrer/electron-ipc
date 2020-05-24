@@ -4,6 +4,7 @@ export type SystemInfo = {
   threadId: number;
   feature: string;
   kernel: string;
+  time: number;
 };
 
 export type Addon = {
@@ -21,10 +22,12 @@ export function loadAndWrapAddon(): Addon {
     anotherKey: anotherKey,
     getSystemInfo: async (threadId: number, feature: string) => {
       const kernel = execSync("uname -a").toString();
+      const time = new Date().getTime();
       return {
         threadId,
         feature,
         kernel,
+        time,
       };
     },
   });

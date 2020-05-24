@@ -25,8 +25,7 @@ function createWindow() {
   });
 
   addonService = new AddonServiceMain(ipcMain);
-  if (addonService) {
-    console.log("addonService created ...");
+  if (!addonService) {
   }
 }
 

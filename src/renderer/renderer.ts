@@ -11,14 +11,13 @@ function createAddonServiceRender(ipcRenderer: IpcRenderer): AddonService {
   };
 }
 
-const service: AddonService = createAddonServiceRender(
-  window.bridge.ipcRenderer
-);
+const service = createAddonServiceRender(window.bridge.ipcRenderer);
 const requestOSInfo = document.getElementById("request-os-info");
+const osInfo = document.getElementById("os-info");
 requestOSInfo!.addEventListener("click", async () => {
-  // await service.setUser("4");
-  const systemInfo = await service.getSystemInfo(1, "kernel");
-  const osInfo = document.getElementById("os-info");
-  osInfo!.innerHTML =
-    systemInfo.threadId + ": " + systemInfo.feature + " > " + systemInfo.kernel;
+  osInfo!.innerHTML = "'";
+  await service.setUser("4");
+  const threadId = Math.floor(Math.random() * 10000);
+  const systemInfo = await service.getSystemInfo(threadId, "kernel");
+  osInfo!.innerHTML = `<b>threadId:</b> ${systemInfo.threadId} <br/> <b>feature:</b> ${systemInfo.feature} <br/> <b>time:</b> ${systemInfo.time} <br /> <b>kernel:</b> ${systemInfo.kernel}`;
 });
