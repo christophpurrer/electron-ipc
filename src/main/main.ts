@@ -1,9 +1,9 @@
-import { app, BrowserWindow, ipcMain, IpcMainInvokeEvent } from "electron";
+import { app, BrowserWindow, ipcMain } from "electron";
 import * as path from "path";
-import { loadAndWrapAddon, Addon } from "../shared/addon";
+import { AddonServiceMain } from "./addonServiceMain";
 
 let mainWindow: Electron.BrowserWindow | null;
-let addon: Addon;
+let addonService: AddonServiceMain | null;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -20,30 +20,14 @@ function createWindow() {
   // mainWindow.webContents.openDevTools();
 
   mainWindow.on("closed", () => {
+    addonService = null;
     mainWindow = null;
   });
 
-  addon = loadAndWrapAddon();
-
-  const methods = Object.getOwnPropertyNames(addon).filter(
-    (item) => typeof (addon as any)[item] === "function"
-  );
-  methods.forEach((method) => {
-    ipcMain.handle(method, async (event: IpcMainInvokeEvent, args: any[]) => {
-      console.log(`event: ${event}`);
-      console.log(`args: ${args}`);
-      const f = (addon as any)[method];
-      return f(...args);
-    });
-  });
-
-  // Main process
-  // ipcMain.handle(
-  //   "getSystemInfo",
-  //   async (event: IpcMainInvokeEvent, args: any[]) => {
-  //     return addon.getSystemInfo(args[0], args[1]);
-  //   }
-  // );
+  addonService = new AddonServiceMain(ipcMain);
+  if (addonService) {
+    console.log("addonService created ...");
+  }
 }
 
 app.on("ready", createWindow);
