@@ -1,9 +1,11 @@
 import { app, BrowserWindow, ipcMain } from "electron";
 import * as path from "path";
 import { AddonServiceMain } from "./addonServiceMain";
+import { loadAndWrapAddon } from "../shared/addon";
 
 let mainWindow: Electron.BrowserWindow | null;
 let addonService: AddonServiceMain | null;
+const addon = loadAndWrapAddon();
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -44,3 +46,7 @@ app.on("activate", () => {
     createWindow();
   }
 });
+
+module.exports = {
+  addon,
+};

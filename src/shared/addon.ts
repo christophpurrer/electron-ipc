@@ -5,6 +5,7 @@ export type SystemInfo = {
   feature: string;
   kernel: string;
   time: number;
+  data: Array<string>;
 };
 
 export type Addon = {
@@ -17,6 +18,7 @@ export function loadAndWrapAddon(): Addon {
   const anotherKey = new Map<string, number>();
   anotherKey.set("one", 1);
   anotherKey.set("two", 2);
+  const data = ["one", "two", "three"];
   return Object.freeze({
     key: "notification",
     anotherKey: anotherKey,
@@ -28,6 +30,7 @@ export function loadAndWrapAddon(): Addon {
         feature,
         kernel,
         time,
+        data,
       };
     },
   });
