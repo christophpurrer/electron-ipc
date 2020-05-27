@@ -11,6 +11,7 @@ function createAddonServiceRender(ipcRenderer: IpcRenderer): AddonService {
   };
 }
 
+// a simple IPC example
 const service = createAddonServiceRender(window.bridge.ipcRenderer);
 const requestOSInfo = document.getElementById("request-os-info");
 const osInfo = document.getElementById("os-info");
@@ -27,3 +28,26 @@ requestOSInfo!.addEventListener("click", async () => {
     `<b>time:</b> ${systemInfo.time} <br/> ` +
     `<b>kernel:</b> ${systemInfo.kernel}`;
 });
+
+// make n calls to get a sense of performance
+const makeNCalls = document.getElementById("make-n-calls");
+const nCalls = 500;
+makeNCalls!.innerText = `Make ${nCalls} IPC requests`;
+const nCallsResult = document.getElementById("n-calls-result");
+makeNCalls!.addEventListener("click", async () => {
+  const now = new Date().getTime();
+  for (let i = 0; i < nCalls; i++) {
+    await service.getSystemInfo(i, "kernel");
+  }
+  nCallsResult!.innerHTML = `${nCalls} IPC invoke calls took ${
+    new Date().getTime() - now
+  } ms`;
+});
+
+// show current time to ensure render process is not blocked
+const time = document.getElementById("time");
+time!.innerHTML = new Date().toLocaleTimeString();
+window.setInterval(
+  () => (time!.innerHTML = new Date().toLocaleTimeString()),
+  1000
+);
