@@ -16,8 +16,11 @@ export class AddonServiceMain implements AddonService, IpcService {
   getSystemInfo(threadId: number, feature: string): Promise<SystemInfo> {
     return this.addon.getSystemInfo(threadId, feature);
   }
-  setUser(userId: string): Promise<void> {
-    this.userId = userId;
-    return Promise.resolve();
+  setUser(userId: string | null): Promise<void> {
+    if (userId) {
+      this.userId = userId;
+      return Promise.resolve();
+    }
+    return Promise.reject();
   }
 }

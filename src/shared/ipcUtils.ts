@@ -18,7 +18,7 @@ export function registerIpcChannels(obj: IpcService) {
     console.log(`addonService register: ${method}(...) on ipcMain`);
     obj.ipcMain.handle(method, async (_event: any, args: any) => {
       const f = (obj as any)[method];
-      return f.call(obj, ...args);
+      return f.call(obj, ...args).catch((e: Error) => console.error(e));
     });
   });
 }
