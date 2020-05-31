@@ -32,7 +32,11 @@ export function registerIpcChannels(
     const channelName = getIpcChannelName(scope, method);
     ipcMain.handle(channelName, async (_event: any, args: any) => {
       const f = (obj as any)[method];
-      return f.call(obj, ...args).catch((e: Error) => console.error(e));
+      try {
+        return f.call(obj, ...args).catch((e: Error) => console.error(e));
+      } catch (e) {
+        console.error(`Function ${method} should return a Promise.\n${e}`);
+      }
     });
     ipcChannels.push({ scope, method });
   });
