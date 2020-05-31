@@ -1,24 +1,14 @@
-import { IpcMain } from "electron";
+export type Scope = "AddonService";
 
-export type IpcService = {
-  ipcMain: IpcMain;
+export type IpcChannel = {
+  scope: Scope;
+  method: string;
 };
 
-export function registerIpcChannels(obj: IpcService) {
-  // get object methods
-  const methods = Object.getOwnPropertyNames(Object.getPrototypeOf(obj)).filter(
-    (method) =>
-      method &&
-      method !== "constructor" &&
-      (obj as any)[method] !== undefined &&
-      typeof (obj as any)[method] === "function"
-  );
-  // register object methods to respond to ipc requests
-  methods.forEach((method: string) => {
-    console.log(`addonService register: ${method}(...) on ipcMain`);
-    obj.ipcMain.handle(method, async (_event: any, args: any) => {
-      const f = (obj as any)[method];
-      return f.call(obj, ...args).catch((e: Error) => console.error(e));
-    });
-  });
+export function getIpcChannelName(scope: Scope, method: string): string {
+  return scope + "_" + method;
+}
+
+export function channelRegistry(): string {
+  return "ALL_CHANNELS";
 }

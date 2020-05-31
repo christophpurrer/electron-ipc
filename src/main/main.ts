@@ -4,6 +4,7 @@ import { AddonServiceMain } from "./addonServiceMain";
 import { loadAndWrapAddon } from "../shared/addon";
 
 let mainWindow: Electron.BrowserWindow | null;
+// @ts-ignore. noUnusedLocals
 let addonService: AddonServiceMain | null;
 const addon = loadAndWrapAddon();
 
@@ -27,8 +28,6 @@ function createWindow() {
   });
 
   addonService = new AddonServiceMain(ipcMain);
-  if (!addonService) {
-  }
 }
 
 app.on("ready", createWindow);

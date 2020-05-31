@@ -2,16 +2,11 @@
 // be executed in the renderer process for that window.
 // All of the Node.js APIs are available in this process.
 import { AddonService } from "../shared/addonService";
-import { IpcRenderer } from "electron";
 import { SystemInfo } from "src/shared/addon";
+import { createIpcClient, getIpcChannels } from "./ipcRendererUtils";
 
-function createAddonServiceRender(ipcRenderer: IpcRenderer): AddonService {
-  return {
-    getSystemInfo: (...args) => ipcRenderer.invoke("getSystemInfo", [...args]),
-    setUser: (...args) => ipcRenderer.invoke("setUser", [...args]),
-  };
-}
-const service = createAddonServiceRender(window.bridge.ipcRenderer);
+const channels = getIpcChannels("AddonService");
+const service = createIpcClient<AddonService>({}, channels);
 
 // a simple IPC example
 {
