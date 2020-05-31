@@ -2,6 +2,7 @@
 // be executed in the renderer process for that window.
 // All of the Node.js APIs are available in this process.
 import { AddonService } from "../shared/addonService";
+import { loadAndWrapAddon, Addon } from "../shared/addon";
 import { SystemInfo } from "src/shared/addon";
 import { createIpcClient, getIpcChannels } from "./ipcRendererUtils";
 
@@ -27,57 +28,58 @@ const service = createIpcClient<AddonService>({}, channels);
   });
 }
 
-function processResult(systemInfo: SystemInfo) {
+function processResult(systemInfo: SystemInfo): boolean {
   const string =
     systemInfo.feature +
     systemInfo.kernel +
     systemInfo.threadId +
     systemInfo.threadId;
   if (string) {
-    return;
+    return true;
   }
+  return false;
 }
 
-const nCalls = 500;
-// make n IPC requests to get a sense of performance
-{
-  const makeNIPCRequests = document.getElementById("make-n-ipc-requests");
-  makeNIPCRequests!.innerText = `Make ${nCalls} IPC requests`;
-  const nPCRequestsResult = document.getElementById("n-ipc-requests-result");
-  makeNIPCRequests!.addEventListener("click", async () => {
-    nPCRequestsResult!.innerHTML = "Loading ...";
-    const now = new Date().getTime();
-    for (let i = 0; i < nCalls; i++) {
-      const result = await service.getSystemInfo(i, "kernel");
-      processResult(result);
-    }
-    nPCRequestsResult!.innerHTML = `${nCalls} IPC invoke calls took ${
-      new Date().getTime() - now
-    } ms`;
-  });
-}
-
-// make n remote-modoule calls to get a sense of performance
-{
-  const addon = require("electron").remote.require("./main").addon;
-  const makeNRemoteModuleCalls = document.getElementById(
-    "make-n-remote-module-calls"
-  );
-  makeNRemoteModuleCalls!.innerText = `Make ${nCalls} remote.module calls`;
-  const nRemoteModuleCallsResult = document.getElementById(
-    "make-n-remote-module-calls-result"
-  );
-  makeNRemoteModuleCalls!.addEventListener("click", async () => {
-    nRemoteModuleCallsResult!.innerHTML = "Loading ...";
+function addonCallsHelper(
+  addon: Addon | AddonService,
+  type: string,
+  button: HTMLElement | null,
+  result: HTMLElement | null
+) {
+  const nCalls = 500;
+  button!.innerText = `Make ${nCalls} ${type}`;
+  button!.addEventListener("click", async () => {
+    result!.innerHTML = "Loading ...";
     const now = new Date().getTime();
     for (let i = 0; i < nCalls; i++) {
       const result = await addon.getSystemInfo(i, "kernel");
       processResult(result);
     }
-    nRemoteModuleCallsResult!.innerHTML = `${nCalls} IPC invoke calls took ${
-      new Date().getTime() - now
-    } ms`;
+    result!.innerHTML = `${nCalls} calls took ${new Date().getTime() - now} ms`;
   });
+}
+
+// make n IPC requests to get a sense of performance
+{
+  const button = document.getElementById("make-n-ipc-requests");
+  const result = document.getElementById("n-ipc-requests-result");
+  addonCallsHelper(service, "IPC requests", button, result);
+}
+
+// make n remote-modoule calls to get a sense of performance
+{
+  const addon = require("electron").remote.require("./main").addon;
+  const button = document.getElementById("make-n-remote-module-calls");
+  const result = document.getElementById("make-n-remote-module-calls-result");
+  addonCallsHelper(addon, "remote.module calls", button, result);
+}
+
+// make n addon calls in the render process to get a sense of performance
+{
+  const addon = loadAndWrapAddon();
+  const button = document.getElementById("make-n-render-module-calls");
+  const result = document.getElementById("make-n-render-module-calls-result");
+  addonCallsHelper(addon, "render.module calls", button, result);
 }
 
 {

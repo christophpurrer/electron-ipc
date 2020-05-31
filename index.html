@@ -19,12 +19,20 @@
     </div>
     <button id="request-os-info" class="row">Request OS Info via IPC</button>
     <div id="os-info" class="row"></div>
-    <button id="make-n-ipc-requests" class="row">Make 1000 IPC requests</button>
+
+    <button id="make-n-ipc-requests" class="row">Make 500 IPC requests</button>
     <div id="n-ipc-requests-result" class="row"></div>
+
     <button id="make-n-remote-module-calls" class="row">
-      Make 1000 remote.module requests
+      Make 500 remote.module calls
     </button>
     <div id="make-n-remote-module-calls-result" class="row"></div>
+
+    <button id="make-n-render-module-calls" class="row">
+      Make 500 render.module calls
+    </button>
+    <div id="make-n-render-module-calls-result" class="row"></div>
+
     <div id="time" class="row"></div>
     <script>
       require("./dist/renderer/renderer.js");
