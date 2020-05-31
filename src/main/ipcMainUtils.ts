@@ -12,13 +12,19 @@ export function registerIpcChannels(
   scope: Scope
 ) {
   const now = new Date().getTime();
-  // get object methods
-  const methods = Object.getOwnPropertyNames(Object.getPrototypeOf(obj)).filter(
-    (method) =>
-      method &&
-      method !== "constructor" &&
-      (obj as any)[method] !== undefined &&
-      typeof (obj as any)[method] === "function"
+  // get all unique object methods
+  const methods = Array.from(
+    new Set(
+      Object.getOwnPropertyNames(obj)
+        .concat(Object.getOwnPropertyNames(Object.getPrototypeOf(obj)))
+        .filter(
+          (method) =>
+            method &&
+            method !== "constructor" &&
+            (obj as any)[method] !== undefined &&
+            typeof (obj as any)[method] === "function"
+        )
+    )
   );
   // register object methods to respond to ipc requests
   const ipcChannels: Array<IpcChannel> = [];
@@ -30,7 +36,7 @@ export function registerIpcChannels(
     });
     ipcChannels.push({ scope, method });
   });
-  // register all register channels under a registry
+  // register all channels under a registry handle
   const channelRegistryName = getIpcChannelName(scope, channelRegistry());
   ipcMain.on(channelRegistryName, (event: IpcMainEvent, _args: any) => {
     event.returnValue = ipcChannels;
