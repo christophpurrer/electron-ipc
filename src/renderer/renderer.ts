@@ -21,19 +21,25 @@ const service = createIpcClient<AddonService>({}, channels);
     const threadId = Math.floor(Math.random() * 10000);
     const systemInfo = await service.getSystemInfo(threadId, "kernel");
     osInfo!.innerHTML =
+      `<b>processId:</b> ${systemInfo.processId} <br/>` +
       `<b>threadId:</b> ${systemInfo.threadId} <br/>` +
       `<b>feature:</b> ${systemInfo.feature} <br/> ` +
+      `<b>kernel:</b> ${systemInfo.kernel} <br/> ` +
       `<b>time:</b> ${systemInfo.time} <br/> ` +
-      `<b>kernel:</b> ${systemInfo.kernel}`;
+      `<b>data:</b> ${systemInfo.data} <br/> ` +
+      `<b>moreData:</b> ${systemInfo.moreData}`;
   });
 }
 
 function processResult(systemInfo: SystemInfo): boolean {
   const string =
+    systemInfo.processId +
     systemInfo.feature +
     systemInfo.kernel +
     systemInfo.threadId +
-    systemInfo.threadId;
+    systemInfo.time +
+    systemInfo.data.join("") +
+    systemInfo.moreData.join("");
   if (string) {
     return true;
   }
@@ -62,7 +68,7 @@ function addonCallsHelper(
 // make n IPC requests to get a sense of performance
 {
   const button = document.getElementById("make-n-ipc-requests");
-  const result = document.getElementById("n-ipc-requests-result");
+  const result = document.getElementById("make-n-ipc-requests-result");
   addonCallsHelper(service, "IPC requests", button, result);
 }
 
