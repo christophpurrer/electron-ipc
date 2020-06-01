@@ -5,6 +5,7 @@ import {
   Scope,
   channelRegistry,
 } from "../shared/ipcUtils";
+import { getReturnType } from "../decorators/returnType";
 
 export function registerIpcChannels(
   obj: object,
@@ -30,15 +31,25 @@ export function registerIpcChannels(
   const ipcChannels: Array<IpcChannel> = [];
   methods.forEach((method: string) => {
     const channelName = getIpcChannelName(scope, method);
-    ipcMain.handle(channelName, async (_event: any, args: any) => {
-      const f = (obj as any)[method];
-      try {
+    const f = (obj as any)[method];
+    const isSync = getReturnType(obj, method) !== "Promise";
+    if (isSync) {
+      console.log(
+        `Function ${method} should return a Promise to not block main and render thread`
+      );
+      ipcMain.on(channelName, (event: IpcMainEvent, args: any) => {
+        try {
+          event.returnValue = f.call(obj, ...args);
+        } catch (e) {
+          console.error(e);
+        }
+      });
+    } else {
+      ipcMain.handle(channelName, async (_event: any, args: any) => {
         return f.call(obj, ...args).catch((e: Error) => console.error(e));
-      } catch (e) {
-        console.error(`Function ${method} should return a Promise.\n${e}`);
-      }
-    });
-    ipcChannels.push({ scope, method });
+      });
+    }
+    ipcChannels.push({ scope, method, isSync });
   });
   // register all channels under a registry handle
   const channelRegistryName = getIpcChannelName(scope, channelRegistry());

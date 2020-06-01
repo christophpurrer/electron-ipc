@@ -14,8 +14,11 @@ export function createIpcClient<T>(
   ipcChannels.forEach((ipcChannel) => {
     const channelName = getIpcChannelName(ipcChannel.scope, ipcChannel.method);
     // @ts-ignore. Typescript can't verify the object
-    obj[ipcChannel.method] = (...args: any) =>
-      ipcRenderer.invoke(channelName, [...args]);
+    obj[ipcChannel.method] = (...args: any) => {
+      return ipcChannel.isSync
+        ? ipcRenderer.sendSync(channelName, [...args])
+        : ipcRenderer.invoke(channelName, [...args]);
+    };
   });
   console.log(
     `Created ipcClient with : ${ipcChannels.length} channels in ${

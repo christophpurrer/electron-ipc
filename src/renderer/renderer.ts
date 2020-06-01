@@ -17,10 +17,14 @@ const service = createIpcClient<AddonService>({}, channels);
     osInfo!.innerHTML = "'";
     // set invalid value to test promise rejection
     await service.setUser(null);
+    // call something sync
+    const value = service.doSomethingSync();
+    service.doSomethingElseSync();
     // make another ipc.invoke() request
     const threadId = Math.floor(Math.random() * 10000);
     const systemInfo = await service.getSystemInfo(threadId, "kernel");
     osInfo!.innerHTML =
+      `<b>value:</b> ${value} <br/>` +
       `<b>processId:</b> ${systemInfo.processId} <br/>` +
       `<b>threadId:</b> ${systemInfo.threadId} <br/>` +
       `<b>feature:</b> ${systemInfo.feature} <br/> ` +
