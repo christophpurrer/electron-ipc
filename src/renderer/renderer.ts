@@ -16,7 +16,10 @@ const service = createIpcClient<AddonService>({}, channels);
   requestOSInfo!.addEventListener("click", async () => {
     osInfo!.innerHTML = "'";
     // set invalid value to test promise rejection
-    await service.setUser(null);
+    // @ts-ignore
+    const rejectedPromise = await service.setUser(null).catch((e: Error) => {
+      console.error(e);
+    });
     // call something sync
     const value = service.doSomethingSync();
     service.doSomethingElseSync();

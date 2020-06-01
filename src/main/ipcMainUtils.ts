@@ -46,7 +46,7 @@ export function registerIpcChannels(
       });
     } else {
       ipcMain.handle(channelName, async (_event: any, args: any) => {
-        return f.call(obj, ...args).catch((e: Error) => console.error(e));
+        return f.call(obj, ...args);
       });
     }
     ipcChannels.push({ scope, method, isSync });

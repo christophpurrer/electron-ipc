@@ -24,7 +24,7 @@ export class AddonServiceMain implements AddonService {
       this.userId = userId;
       return Promise.resolve();
     }
-    return Promise.reject();
+    return Promise.reject("userId missing");
   }
   @returnType
   doSomethingSync(): number {
