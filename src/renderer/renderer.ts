@@ -17,9 +17,15 @@ const service = createIpcClient<AddonService>({}, channels);
     osInfo!.innerHTML = "'";
     // set invalid value to test promise rejection
     // @ts-ignore
-    const rejectedPromise = await service.setUser(null).catch((e: Error) => {
-      console.error(e);
-    });
+    const rejectedPromise = await service
+      .setUser(null)
+      .catch((e: Error) => console.error(`error from async: ${e}`));
+    try {
+      service.setUserSync(null);
+    } catch (e) {
+      console.error(`error from sync ${e}`);
+    }
+
     // call something sync
     const value = service.doSomethingSync();
     service.doSomethingElseSync();

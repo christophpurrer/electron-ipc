@@ -6,6 +6,11 @@ export type IpcChannel = {
   isSync: boolean;
 };
 
+export type IpcResult = {
+  result: any;
+  error: string | null;
+};
+
 export function getIpcChannelName(scope: Scope, method: string): string {
   return scope + "_" + method;
 }

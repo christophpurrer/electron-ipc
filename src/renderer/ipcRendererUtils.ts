@@ -4,6 +4,7 @@ import {
   getIpcChannelName,
   Scope,
   channelRegistry,
+  IpcResult,
 } from "../shared/ipcUtils";
 
 export function createIpcClient<T>(
@@ -13,12 +14,26 @@ export function createIpcClient<T>(
   const now = new Date().getTime();
   ipcChannels.forEach((ipcChannel) => {
     const channelName = getIpcChannelName(ipcChannel.scope, ipcChannel.method);
-    // @ts-ignore. Typescript can't verify the object
-    obj[ipcChannel.method] = (...args: any) => {
-      return ipcChannel.isSync
-        ? ipcRenderer.sendSync(channelName, [...args])
-        : ipcRenderer.invoke(channelName, [...args]);
-    };
+    if (ipcChannel.isSync) {
+      // @ts-ignore. Typescript can't verify the object
+      obj[ipcChannel.method] = (...args: any) => {
+        const result: IpcResult = ipcRenderer.sendSync(channelName, [...args]);
+        if (result.error) {
+          throw JSON.parse(result.error);
+        }
+        return result.result;
+      };
+    } else {
+      // @ts-ignore. Typescript can't verify the object
+      obj[ipcChannel.method] = async (...args: any) => {
+        const result: IpcResult = await ipcRenderer.invoke(channelName, [
+          ...args,
+        ]);
+        return result.error
+          ? Promise.reject(JSON.parse(result.error))
+          : Promise.resolve(result.result);
+      };
+    }
   });
   console.log(
     `Created ipcClient with : ${ipcChannels.length} channels in ${

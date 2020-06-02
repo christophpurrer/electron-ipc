@@ -4,6 +4,7 @@ import {
   getIpcChannelName,
   Scope,
   channelRegistry,
+  IpcResult,
 } from "../shared/ipcUtils";
 import { getReturnType } from "../decorators/returnType";
 
@@ -37,17 +38,29 @@ export function registerIpcChannels(
       console.log(
         `Function ${method} should return a Promise to not block main and render thread`
       );
-      ipcMain.on(channelName, (event: IpcMainEvent, args: any) => {
+      ipcMain.on(channelName, (event: IpcMainEvent, args: any): void => {
+        let error = null;
+        let result = null;
         try {
-          event.returnValue = f.call(obj, ...args);
+          result = f.call(obj, ...args);
         } catch (e) {
-          console.error(e);
+          error = JSON.stringify(e, Object.getOwnPropertyNames(e));
         }
+        event.returnValue = { result, error };
       });
     } else {
-      ipcMain.handle(channelName, async (_event: any, args: any) => {
-        return f.call(obj, ...args);
-      });
+      ipcMain.handle(
+        channelName,
+        async (_event: any, args: any): Promise<IpcResult> => {
+          let error = null;
+          const result = await f.call(obj, ...args).catch(
+            (e: Error) =>
+              // Serialize error https://stackoverflow.com/a/26199752
+              (error = JSON.stringify(e, Object.getOwnPropertyNames(e)))
+          );
+          return { result, error };
+        }
+      );
     }
     ipcChannels.push({ scope, method, isSync });
   });
