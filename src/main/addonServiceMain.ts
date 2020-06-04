@@ -1,24 +1,19 @@
 import { loadAndWrapAddon, Addon, SystemInfo } from "../shared/addon";
 import { AddonService } from "../shared/addonService";
-import { IpcMain } from "electron";
-import { registerIpcChannels } from "./ipcMainUtils";
-import { returnType } from "../decorators/returnType";
+import { AddonServiceChannels } from "../shared/addonServiceChannels";
+import { registerIpcChannels } from "../shared/ipcUtils";
 
 export class AddonServiceMain implements AddonService {
-  ipcMain: IpcMain;
   addon: Addon;
   userId: string | null = null;
-  constructor(ipcMain: IpcMain) {
+  constructor() {
     console.log("addonService constructor ...");
-    this.ipcMain = ipcMain;
     this.addon = loadAndWrapAddon();
-    registerIpcChannels(this, ipcMain, "AddonService");
+    registerIpcChannels(this, "AddonService", AddonServiceChannels);
   }
-  @returnType
   getSystemInfo(threadId: number, feature: string): Promise<SystemInfo> {
     return this.addon.getSystemInfo(threadId, feature);
   }
-  @returnType
   setUser(userId: string | null): Promise<void> {
     if (userId) {
       this.userId = userId;
@@ -26,17 +21,14 @@ export class AddonServiceMain implements AddonService {
     }
     return Promise.reject(new Error("userId missing"));
   }
-  @returnType
   setUserSync(userId: string | null): void {
     if (userId) {
       this.userId = userId;
     }
     throw new Error("userId missing");
   }
-  @returnType
   doSomethingSync(): number {
     return new Date().getTime();
   }
-  @returnType
   doSomethingElseSync(): void {}
 }

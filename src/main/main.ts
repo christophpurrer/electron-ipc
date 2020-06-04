@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain } from "electron";
+import { app, BrowserWindow } from "electron";
 import * as path from "path";
 import { AddonServiceMain } from "./addonServiceMain";
 import { loadAndWrapAddon } from "../shared/addon";
@@ -27,7 +27,7 @@ function createWindow() {
     mainWindow = null;
   });
 
-  addonService = new AddonServiceMain(ipcMain);
+  addonService = new AddonServiceMain();
 }
 
 app.on("ready", createWindow);

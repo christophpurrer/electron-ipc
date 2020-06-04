@@ -1,13 +1,17 @@
 // This file is required by the index.html file and will
 // be executed in the renderer process for that window.
 // All of the Node.js APIs are available in this process.
-import { AddonService } from "../shared/addonService";
 import { loadAndWrapAddon, Addon } from "../shared/addon";
+import { AddonService } from "../shared/addonService";
+import { AddonServiceChannels } from "../shared/addonServiceChannels";
 import { SystemInfo } from "src/shared/addon";
-import { createIpcClient, getIpcChannels } from "./ipcRendererUtils";
+import { createIpcClient } from "../shared/ipcUtils";
 
-const channels = getIpcChannels("AddonService");
-const service = createIpcClient<AddonService>({}, channels);
+const service = createIpcClient<AddonService>(
+  {},
+  "AddonService",
+  AddonServiceChannels
+);
 
 // a simple IPC example
 {
