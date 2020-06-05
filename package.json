@@ -5,7 +5,8 @@
   "scripts": {
     "build": "tsc",
     "clean": "rm -rf dist && mkdir dist",
-    "prestart": "yarn clean && yarn build",
+    "generateIpcChannels": "node ./dist/scripts/build-generate-ipc-channels.js",
+    "prestart": "yarn clean && yarn build && yarn generateIpcChannels",
     "start": "node_modules/.bin/electron ./dist/main/main.js"
   },
   "author": "Christoph Purrer",
@@ -14,6 +15,7 @@
     "@types/reflect-metadata": "^0.1.0",
     "electron": "^9.0.0",
     "reflect-metadata": "^0.1.13",
-    "typescript": "^3.8.3"
+    "typescript": "^3.8.3",
+    "ts-morph": "^7.1.0"
   }
 }
