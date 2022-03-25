@@ -13,7 +13,7 @@
   "license": "MIT",
   "devDependencies": {
     "@types/reflect-metadata": "^0.1.0",
-    "electron": "^11.5.0",
+    "electron": "^13.6.6",
     "reflect-metadata": "^0.1.13",
     "typescript": "^3.8.3",
     "ts-morph": "^7.1.0"
